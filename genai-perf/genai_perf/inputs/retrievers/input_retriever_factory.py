@@ -137,10 +137,15 @@ class InputRetrieverFactory:
         dataset_json["rows"] = []
         for _ in range(self.config.num_prompts):
             row: Dict["str", Any] = {"row": {}}
-            synthetic_prompt = self._create_synthetic_prompt()
-            row["row"]["text"] = synthetic_prompt
 
-            if self.config.output_format == OutputFormat.OPENAI_VISION:
+            synthetic_prompt = self._create_synthetic_prompt()
+            if False:
+                row["row"]["text"] = synthetic_prompt
+            else:
+                synthetic_image = self._render_document(synthetic_prompt)
+                row["row"]["image"] = synthetic_image
+
+            if False: #self.config.output_format == OutputFormat.OPENAI_VISION:
                 synthetic_image = self._create_synthetic_image()
                 row["row"]["image"] = synthetic_image
 
@@ -214,4 +219,14 @@ class InputRetrieverFactory:
             image_height_mean=self.config.image_height_mean,
             image_height_stddev=self.config.image_height_stddev,
             image_format=self.config.image_format,
+        )
+
+    def _render_document(self, prompt) -> str:
+        return SyntheticImageGenerator.create_synthetic_image(
+            image_width_mean=self.config.image_width_mean,
+            image_width_stddev=self.config.image_width_stddev,
+            image_height_mean=self.config.image_height_mean,
+            image_height_stddev=self.config.image_height_stddev,
+            image_format=self.config.image_format,
+            prompt=prompt,
         )
