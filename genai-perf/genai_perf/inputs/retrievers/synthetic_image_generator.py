@@ -64,10 +64,11 @@ class SyntheticImageGenerator:
             image_height_mean, image_height_stddev
         )
 
+
         if prompt:
             image = Image.new('RGB', (width, height), 'white')
             draw = ImageDraw.Draw(image)
-            draw.text((10, 10), prompt)
+            draw.text((10, 10), prompt, fill='black')
         else:
             image = cls._sample_source_image()
             image = image.resize(size=(width, height))
