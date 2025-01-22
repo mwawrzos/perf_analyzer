@@ -31,7 +31,7 @@ from pathlib import Path
 from typing import Optional
 
 from genai_perf import utils
-from PIL import Image, ImageDraw
+from PIL import Image
 
 
 class ImageFormat(Enum):
@@ -52,7 +52,6 @@ class SyntheticImageGenerator:
         image_height_mean: int,
         image_height_stddev: int,
         image_format: Optional[ImageFormat] = None,
-        prompt: Optional[str] = None,
     ) -> str:
         """Generate base64 encoded synthetic image using the source images."""
         if image_format is None:
@@ -64,14 +63,8 @@ class SyntheticImageGenerator:
             image_height_mean, image_height_stddev
         )
 
-
-        if prompt:
-            image = Image.new('RGB', (width, height), 'white')
-            draw = ImageDraw.Draw(image)
-            draw.text((10, 10), prompt, fill='black')
-        else:
-            image = cls._sample_source_image()
-            image = image.resize(size=(width, height))
+        image = cls._sample_source_image()
+        image = image.resize(size=(width, height))
 
         img_base64 = utils.encode_image(image, image_format.name)
         return f"data:image/{image_format.name.lower()};base64,{img_base64}"
