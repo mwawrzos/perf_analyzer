@@ -91,5 +91,8 @@ class OpenAIChatCompletionsConverter(BaseConverter):
             payload["max_tokens"] = int(
                 random.gauss(config.output_tokens_mean, config.output_tokens_stddev)
             )
+        if 'tool' in config.extra_inputs:
+            payload['tools'] = [{'type': 'function', 'function': {'name': config.extra_inputs['tool']}}]
         for key, value in config.extra_inputs.items():
+            if key == 'tool': continue
             payload[key] = value
