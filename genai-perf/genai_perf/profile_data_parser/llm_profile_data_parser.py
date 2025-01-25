@@ -91,7 +91,7 @@ class LLMProfileDataParser(ProfileDataParser):
             res_timestamps = request["response_timestamps"]
             res_outputs = request["response_outputs"]
 
-            self._preprocess_response(res_timestamps, res_outputs)
+            self._preprocess_response(res_timestamps, res_outputs, request)
 
             # Skip requests with empty response. This happens sometimes when the
             # model returns a single response with empty string.
@@ -175,10 +175,12 @@ class LLMProfileDataParser(ProfileDataParser):
         return zip(a, b)
 
     def _preprocess_response(
-        self, res_timestamps: List[int], res_outputs: List[Dict[str, str]]
+        self, res_timestamps: List[int], res_outputs: List[Dict[str, str]], request
     ) -> None:
         """Helper function to preprocess responses of a request."""
         if self._service_kind == "openai":
+            if 'streaming' not in request:
+                return [{'response': output} for output in res_outputs]
             # Sometimes streamed chunks are returned in a splintered fashion.
             # This forces a merge with the previous chunk if error detected.
             if len(res_outputs) > 1:
