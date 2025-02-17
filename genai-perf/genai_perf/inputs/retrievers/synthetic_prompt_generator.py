@@ -44,7 +44,7 @@ class SyntheticPromptGenerator:
             The prompt.
         """
 
-        num_prompt_tokens = SyntheticPromptGenerator._sample_random_positive_int(
+        num_prompt_tokens = SyntheticPromptGenerator._sample_random_nonnegative_int(
             prompt_tokens_mean, prompt_tokens_stddev
         )
 
@@ -117,9 +117,9 @@ class SyntheticPromptGenerator:
         return prompt
 
     @classmethod
-    def _sample_random_positive_int(cls, mean: int, stddev: int) -> int:
+    def _sample_random_nonnegative_int(cls, mean: int, stddev: int) -> int:
         random_pos_int = -1
-        while random_pos_int <= 0:
+        while random_pos_int < 0:
             random_pos_int = int(random.gauss(mean, stddev))
 
         return random_pos_int
