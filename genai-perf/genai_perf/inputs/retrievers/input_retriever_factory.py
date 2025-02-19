@@ -138,7 +138,7 @@ class InputRetrieverFactory:
         for _ in range(self.config.num_prompts):
             row: Dict["str", Any] = {"row": {}}
             synthetic_prompt = self._create_synthetic_prompt()
-            if synthetic_prompt:
+            if False:
                 row["row"]["text"] = synthetic_prompt
 
             if self.config.output_format == OutputFormat.OPENAI_VISION:
